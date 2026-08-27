@@ -1,0 +1,33 @@
+{
+  "name": "Priya Mehta",
+  "email": "priya.mehta@gmail.com",
+  "phone": "+91 8765432109",
+  "skills": [
+    "Python",
+    "Machine Learning",
+    "Deep Learning",
+    "Scikit-learn",
+    "TensorFlow",
+    "Pandas",
+    "NumPy",
+    "Matplotlib",
+    "SQL",
+    "Git",
+    "Jupyter Notebook"
+  ],
+  "education": [
+    {
+      "degree": "B.Sc in Data Science",
+      "institution": "Pune University"
+    }
+  ],
+  "experience": [
+    {
+      "job_title": "Data Science Intern",
+      "company": "Analytics India Pvt Ltd",
+      "duration": "May 2023 - July 2023"
+    }
+  ],
+  "linkedin": "https://linkedin.com/in/priyamehta",
+  "github": "https://github.com/priyamehta"
+}

@@ -1,0 +1,53 @@
+{
+  "name": "Ravi Kumar",
+  "email": "ravi.kumar@outlook.com",
+  "phone": "+91 9123456789",
+  "skills": [
+    "Python",
+    "PyTorch",
+    "TensorFlow",
+    "Scikit-learn",
+    "MLOps",
+    "Apache Kafka",
+    "Apache Airflow",
+    "Docker",
+    "Kubernetes",
+    "AWS SageMaker",
+    "Google Cloud Platform",
+    "Terraform",
+    "Jenkins",
+    "Git",
+    "PostgreSQL",
+    "MongoDB",
+    "Redis",
+    "FastAPI",
+    "REST APIs",
+    "NLP",
+    "Computer Vision",
+    "BERT"
+  ],
+  "education": [
+    {
+      "degree": "M.Tech in Artificial Intelligence",
+      "institution": "IIT Bombay"
+    },
+    {
+      "degree": "B.Tech in Electronics",
+      "institution": "NIT Trichy"
+    }
+  ],
+  "experience": [
+    {
+      "job_title": "Senior ML Engineer",
+      "company": "Google India Pvt Ltd",
+      "duration": "March 2021 - Present"
+    },
+    {
+      "job_title": "ML Engineer",
+      "company": "Flipkart Internet Pvt Ltd",
+      "duration": "July 2019 - February 2021"
+    }
+  ],
+  "linkedin": "https://linkedin.com/in/ravikumar",
+  "github": "https://github.com/ravikumar"
+}

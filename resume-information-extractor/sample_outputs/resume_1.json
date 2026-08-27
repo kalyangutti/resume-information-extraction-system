@@ -1,0 +1,40 @@
+{
+  "name": "Arjun Sharma",
+  "email": "arjun.sharma@email.com",
+  "phone": "+91 9876543210",
+  "skills": [
+    "Python",
+    "FastAPI",
+    "Django",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Git",
+    "REST APIs",
+    "CI/CD",
+    "SQL",
+    "Linux"
+  ],
+  "education": [
+    {
+      "degree": "B.Tech in Computer Science",
+      "institution": "Indian Institute of Technology, Delhi"
+    }
+  ],
+  "experience": [
+    {
+      "job_title": "Software Engineer",
+      "company": "Infosys Limited",
+      "duration": "June 2022 - Present"
+    },
+    {
+      "job_title": "Software Engineer Intern",
+      "company": "TCS (Tata Consultancy Services)",
+      "duration": "January 2022 - May 2022"
+    }
+  ],
+  "linkedin": "https://linkedin.com/in/arjunsharma",
+  "github": "https://github.com/arjunsharma"
+}
