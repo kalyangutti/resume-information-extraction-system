@@ -118,6 +118,29 @@ _OTHER_SECTION_PATTERN = re.compile(
 # Bullet / list prefixes to strip
 _BULLET_PREFIX = re.compile(r"^[\s]*[•\*\-–—○◦►▸▶‣⁃]\s*")
 
+# Table header keywords to ignore
+_TABLE_HEADER_RE = re.compile(
+    r"\b(?:Degree|Specialization|Institute|Institution|University|Board|Year|CPI|CGPA|Grade|Marks|Percentage|Passing\s+Year|Year\s+of\s+Passing)\b",
+    re.IGNORECASE,
+)
+
+def _is_table_header(line: str) -> bool:
+    """Return True if line looks like a table header (e.g. 'Degree Specialization Institute Year CPI')."""
+    line_clean = re.sub(r"[|,:;\-]", " ", line.strip())
+    words = [w.lower() for w in line_clean.split() if w]
+    if len(words) <= 6:
+        header_words = {
+            "degree", "specialization", "institute", "institution", "university",
+            "college", "school", "year", "cpi", "cgpa", "grade", "marks",
+            "percentage", "board", "passing"
+        }
+        matches = [w for w in words if w in header_words]
+        if len(matches) >= 2:
+            return True
+        if len(words) <= 3 and any(w in {"degree", "specialization", "institute", "institution"} for w in words):
+            return True
+    return False
+
 # "Degree from Institution" keyword
 _FROM_RE = re.compile(r"\bfrom\b", re.IGNORECASE)
 
@@ -369,8 +392,8 @@ def _parse_blocks(lines: list[str]) -> list[EduEntry]:
     for line in lines:
         stripped = _strip_bullet(line.strip())
 
-        # Blank line -> always flush
-        if not stripped:
+        # Skip blank lines and table header lines
+        if not stripped or _is_table_header(stripped):
             if current_block:
                 flush(current_block)
                 current_block = []
@@ -645,28 +668,26 @@ def _strip_year_and_noise(line: str) -> str:
 def _clean_degree(line: str) -> str:
     """
     Extract a clean degree string.
-
-    - Takes only the first line if multi-line
-    - Strips year ranges
-    - Strips CGPA/Percentage suffix after pipe
-    - Does NOT strip parentheses (preserves "Intermediate (Class XII)")
     """
     if "\n" in line:
         line = line.split("\n")[0]
     cleaned = YEAR_RANGE_PATTERN.sub("", line)
-    # Strip empty or whitespace-only parens left behind by date range removal
     cleaned = re.sub(r"\(\s*\)", "", cleaned)
-    # Drop everything after pipe (| CGPA: 9.2, | Percentage: 78%)
     cleaned = re.sub(r"\s*\|\s*.*$", "", cleaned)
-    # Drop trailing CGPA/Percentage with no pipe
     cleaned = re.sub(
         r"\s*[,;]?\s*(?:CGPA|GPA|Percentage|Score|Grade|Marks)\s*[:\-]?\s*[\d./%]+\s*$",
         "",
         cleaned,
         flags=re.IGNORECASE,
     )
-    return cleaned.strip(" -\u2013\u2014|,")
+    res = cleaned.strip(" -\u2013\u2014|,")
+    return "" if res.lower() in {"degree", "specialization", "qualification"} else res
 
+
+_SUBJECT_KEYWORDS = re.compile(
+    r"\b(?:Physics|Chemistry|Mathematics|Maths|Biology|Science|Arts|Commerce|Humanities|MPC|BiPC|CEC|HEC|PCMB|Computer\s+Science)\b",
+    re.IGNORECASE,
+)
 
 def _clean_institution(line: str) -> str:
     """Extract a clean institution name — collapse internal spaces, strip noise."""
@@ -674,23 +695,23 @@ def _clean_institution(line: str) -> str:
         line = line.split("\n")[0]
     cleaned = YEAR_RANGE_PATTERN.sub("", line)
     cleaned = re.sub(r"\s*\|\s*.*$", "", cleaned)
-    # Strip trailing standalone 4-digit year (right-aligned year on same line)
     cleaned = re.sub(r"\s*\b(?:19|20)\d{2}\b\s*$", "", cleaned)
-    # Strip trailing CGPA/Percentage/GPA suffixes
     cleaned = re.sub(
         r"\s*[,;]?\s*(?:CGPA|GPA|Percentage|Score|Grade|Marks)\s*[:\-]?\s*[\d./%]+\s*$",
         "",
         cleaned,
         flags=re.IGNORECASE,
     )
-    # Collapse runs of whitespace (PDF blocks often have padded alignment spaces)
     cleaned = re.sub(r" {2,}", " ", cleaned)
-    return cleaned.strip(" -\u2013\u2014|,")
+    res = cleaned.strip(" -\u2013\u2014|,")
+    if _SUBJECT_KEYWORDS.search(res) and not _INSTITUTION_KEYWORDS.search(res):
+        return ""
+    return "" if res.lower() in {"institute", "institution", "university", "college", "school"} else res
 
 
 def _looks_like_institution(text: str) -> bool:
     """Heuristic: does this text look like a proper-noun institution name?"""
-    if DEGREE_PATTERN.search(text):
+    if DEGREE_PATTERN.search(text) or _SUBJECT_KEYWORDS.search(text):
         return False
     words = text.split()
     if len(words) < 2:
@@ -706,16 +727,38 @@ def _normalise(s: Optional[str]) -> str:
     """Normalise a string for dedup comparison."""
     if s is None:
         return ""
+    # Normalise quotes and dashes
+    s = s.replace("’", "'").replace("‘", "'").replace("`", "'")
+    s = re.sub(r"[–—\-]", "-", s)
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
 def _is_duplicate(entry: EduEntry, existing: list[EduEntry]) -> bool:
-    """Return True if entry is already represented in existing."""
+    """
+    Return True if entry is already fully represented or redundant in existing.
+    Upgrades existing partial entries with degree/institution if the new entry provides them.
+    """
     nd = _normalise(entry.get("degree"))
     ni = _normalise(entry.get("institution"))
+
     for e in existing:
-        if nd and _normalise(e.get("degree")) == nd:
+        ed = _normalise(e.get("degree"))
+        ei = _normalise(e.get("institution"))
+
+        # Match on institution
+        if ni and ei == ni:
+            # If the new entry has a degree but the existing one does not, upgrade it
+            if nd and not ed:
+                e["degree"] = entry["degree"]
+                return True
             return True
-        if ni and _normalise(e.get("institution")) == ni:
+
+        # Match on degree
+        if nd and ed == nd:
+            # If the new entry has an institution but the existing one does not, upgrade it
+            if ni and not ei:
+                e["institution"] = entry["institution"]
+                return True
             return True
+
     return False

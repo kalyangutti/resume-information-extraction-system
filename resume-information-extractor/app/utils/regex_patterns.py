@@ -69,16 +69,25 @@ SECTION_HEADING_PATTERN: re.Pattern = re.compile(
 DATE_RANGE_PATTERN: re.Pattern = re.compile(
     r"""
     (?:
+        # Format A: Month Year - Month Year / Present
         (?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|
-           Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
+           Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Sept|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
         [\s,]*\d{4}
-    )
-    \s*[-–—to]+\s*
-    (?:
+        \s*[-–—to]+\s*
+        (?:
+            (?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|
+               Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Sept|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
+            [\s,]*\d{4}
+            |Present|Current|Till\s+Date|Ongoing
+        )
+        |
+        # Format B: Month-Month Year (e.g. May-Jul 2022, Feb-Mar 2022, Sept-Dec 2020)
         (?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|
-           Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
-        [\s,]*\d{4}
-        |Present|Current|Till\s+Date|Ongoing
+           Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Sept|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
+        \s*[-–—to]+\s*
+        (?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|
+           Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Sept|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)
+        \s*\d{4}
     )
     """,
     re.IGNORECASE | re.VERBOSE,

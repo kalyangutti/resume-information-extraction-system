@@ -135,6 +135,11 @@ def _parse_duration(duration: str) -> Optional[tuple[date, date]]:
 
     if len(parts) == 2:
         start_str, end_str = parts[0].strip(), parts[1].strip()
+        # If start_str is just a month (e.g. "May" in "May-Jul 2022") and end_str has a year, inherit year
+        if start_str.lower() in _MONTH_MAP:
+            end_match = _MONTH_YEAR_RE.match(end_str)
+            if end_match:
+                start_str = f"{start_str} {end_match.group(2)}"
     elif len(parts) == 1:
         # Single token — could be just a year; treat as a single-year period
         start_str = parts[0].strip()
