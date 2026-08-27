@@ -14,6 +14,7 @@ A FastAPI application that reads a PDF or DOCX resume and returns structured JSO
 - [How Each Field is Extracted](#how-each-field-is-extracted)
 - [Running Tests](#running-tests)
 - [Dependencies](#dependencies)
+- [Approach, Assumptions & Limitations](#approach-assumptions--limitations)
 
 ---
 
@@ -21,7 +22,7 @@ A FastAPI application that reads a PDF or DOCX resume and returns structured JSO
 
 Make sure you have **Python 3.10+** installed.
 
-**Step 1 — Clone or open the project folder**
+**Step 1 — Open the project folder**
 
 ```bash
 cd resume-information-extractor
@@ -129,7 +130,7 @@ curl -X POST http://localhost:8000/api/v1/resume/extract \
 
 ### Partial Response — Some Fields Missing
 
-If the resume does not have LinkedIn or GitHub, those fields return `null`. Education entries where only the institution is found (no degree detected) return `"degree": null`.
+If the resume does not have LinkedIn or GitHub, those fields return `null`. Education entries where only the institution is found return `"degree": null`.
 
 ```json
 {
@@ -156,24 +157,23 @@ If the resume does not have LinkedIn or GitHub, those fields return `null`. Educ
 
 ---
 
-### Error Response — Wrong File Type
+### Error Responses
 
+**Wrong file type:**
 ```json
 {
   "detail": "Unsupported file type '.txt'. Only .pdf and .docx files are accepted."
 }
 ```
 
-### Error Response — Empty File
-
+**Empty file:**
 ```json
 {
   "detail": "The uploaded file is empty."
 }
 ```
 
-### Error Response — Scanned PDF (No Text)
-
+**Scanned PDF with no text:**
 ```json
 {
   "detail": "No text could be extracted from the PDF. It may be a scanned/image-only document."
@@ -213,8 +213,7 @@ resume-information-extractor/
 │   └── test_resume_extractor.py     # Unit tests (114 tests)
 │
 ├── requirements.txt
-├── README.md
-└── DOCUMENTATION.md                 # Detailed explanation of every function
+└── README.md
 ```
 
 ---
@@ -270,3 +269,11 @@ All tests should pass. The tests cover every extractor function individually as 
 - Scanned/image PDFs cannot be read (no OCR)
 - Resume content stays local — nothing is sent to any external service
 - For a detailed explanation of every function and design decision, see [DOCUMENTATION.md](DOCUMENTATION.md)
+
+---
+
+## Approach, Assumptions & Limitations
+
+For a full write-up on how the extraction works, what assumptions were made, and the known limitations of this project, see:
+
+👉 [NOTES.md](NOTES.md)
