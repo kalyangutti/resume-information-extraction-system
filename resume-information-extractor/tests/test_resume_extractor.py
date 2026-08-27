@@ -231,6 +231,18 @@ class TestNameExtraction:
         assert name is not None
         assert "Jane" in name or "Smith" in name
 
+    def test_extract_name_single_letter_initials(self):
+        from app.services.resume_extractor import extract_name
+        text = "G B Harsha Vardhan\nSenior Undergraduate\nIIT Gandhinagar"
+        name = extract_name(text)
+        assert name == "G B Harsha Vardhan"
+
+    def test_extract_name_ignores_senior_undergraduate(self):
+        from app.services.resume_extractor import extract_name
+        text = "Senior Undergraduate\nharshagb.itis@gmail.com\nIIT Gandhinagar"
+        name = extract_name(text)
+        assert name is None or name != "Senior Undergraduate"
+
 
 # ---------------------------------------------------------------------------
 # Tests: Email Extraction
@@ -491,6 +503,21 @@ Narayana Junior College
         assert len(result) >= 1
         degrees = [e["degree"] for e in result if e["degree"]]
         assert any("Intermediate" in (d or "") or "12th" in (d or "") for d in degrees)
+
+    def test_extracts_b_tech_with_space(self):
+        from app.services.education_extractor import extract_education
+        text = """
+EDUCATION
+B. Tech in Computer Science & Engineering (2023 - Present)
+Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology CGPA: 9.2
+"""
+        result = extract_education(text)
+        assert len(result) >= 1
+        degree = result[0]["degree"]
+        institution = result[0]["institution"]
+        assert degree is not None and "B. Tech" in degree
+        assert institution is not None and "Vel Tech" in institution
+        assert "CGPA" not in institution
 
     def test_extracts_diploma(self):
         from app.services.education_extractor import extract_education

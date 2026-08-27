@@ -232,6 +232,18 @@ def _extract_pdf(file_bytes: bytes) -> str:
     for page in doc:
         try:
             page_text = page.get_text("text")  # type: ignore[arg-type]
+            # Extract PDF hyperlinked URIs (e.g. hyperlinked 'linkedin', 'github' text)
+            try:
+                links = page.get_links()
+                uris = [
+                    link["uri"]
+                    for link in links
+                    if isinstance(link, dict) and "uri" in link and link["uri"]
+                ]
+                if uris:
+                    page_text += "\n" + "\n".join(uris)
+            except Exception:
+                pass
             pages_text.append(page_text)
         except Exception:
             # Skip pages that cannot be read

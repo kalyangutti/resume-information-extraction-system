@@ -41,15 +41,22 @@ _NAME_EXCLUDE_PATTERN = re.compile(
     @|                              # email addresses
     \d{5,}|                         # long digit sequences (phone)
     (?:https?|www)\.|               # URLs
-    (?:resume|cv|curriculum\s*vitae| # document headings
-       contact|profile|address|
-       objective|summary|reference)
+    \b(?:resume|cv|curriculum\s*vitae| # document headings & titles
+       contact|profile|address|objective|summary|reference|references|
+       education|experience|projects|skills|certifications|publications|
+       honors|awards|languages|hobbies|interests|declaration|
+       undergraduate|postgraduate|graduate|student|candidate|
+       intern|internship|fresher|applicant|scholar|fellow|researcher|
+       software|engineer|engineering|developer|programmer|analyst|
+       consultant|manager|architect|specialist|lead|director|officer|
+       associate|assistant|university|college|institute|school|degree|
+       specialization|technology|department)\b
     """,
     re.IGNORECASE | re.VERBOSE,
 )
 
 _NAME_VALID_PATTERN = re.compile(
-    r"^[A-Z][a-zA-Z\-'.]{1,}\s+[A-Z][a-zA-Z\-'.]{1,}(?:\s+[A-Za-z\-'.]+)?$"
+    r"^(?:[A-Z][a-zA-Z\-'.]*\s+){1,3}[A-Z][a-zA-Z\-'.]*$"
 )
 
 

@@ -95,10 +95,10 @@ DEGREE_PATTERN: re.Pattern = re.compile(
     r"""
     \b(
         # ── School qualifications ──────────────────────────────
-        10th(?:\s+(?:Standard|Grade|Class|Pass))?|
-        12th(?:\s+(?:Standard|Grade|Class|Pass))?|
+        10th(?:\s+(?:Standard|Grade|Class|Pass|ICSE|CBSE|State|Board))?|
+        12th(?:\s+(?:Standard|Grade|Class|Pass|HSC|CBSE|State|Board))?|
         Class\s+(?:X|XII|10|12)|
-        SSC|SSLC|
+        SSC(?:\s+ICSE|\s+CBSE)?|SSLC|
         HSC|Higher\s+Secondary|
         Intermediate|Inter|
         Secondary(?:\s+School)?(?:\s+Certificate)?|
@@ -110,27 +110,27 @@ DEGREE_PATTERN: re.Pattern = re.compile(
         Diploma(?:\s+in\s+[\w\s]+)?|Polytechnic\s+Diploma|
 
         # ── Bachelor degrees ───────────────────────────────────
-        B\.?Tech(?:\s+in\s+[\w\s&]+)?|
-        B\.?E\.?(?:\s+in\s+[\w\s&]+)?|
-        B\.?Sc\.?(?:\s+in\s+[\w\s&]+)?|
-        BCA|B\.?Com(?:\s+in\s+[\w\s&]+)?|
+        B\.?\s*Tech(?:\s+in\s+[\w\s&]+)?|
+        B\.?\s*E\.?(?:\s+in\s+[\w\s&]+)?|
+        B\.?\s*Sc\.?(?:\s+in\s+[\w\s&]+)?|
+        BCA|B\.?\s*Com(?:\s+in\s+[\w\s&]+)?|
         BBA(?:\s+in\s+[\w\s&]+)?|BA(?:\s+in\s+[\w\s&]+)?|
-        B\.?Arch|B\.?Des|B\.?Ed\.?|B\.?Pharm|
-        B\.?Voc|B\.?HM|BHM|
-        MBBS|BDS|BAMS|BHMS|B\.?Pharm|
+        B\.?\s*Arch|B\.?\s*Des|B\.?\s*Ed\.?|B\.?\s*Pharm|
+        B\.?\s*Voc|B\.?\s*HM|BHM|
+        MBBS|BDS|BAMS|BHMS|
         LLB|LLM|
 
         # ── Master degrees ─────────────────────────────────────
-        M\.?Tech(?:\s+in\s+[\w\s&]+)?|
-        M\.?E\.?(?:\s+in\s+[\w\s&]+)?|
-        M\.?Sc\.?(?:\s+in\s+[\w\s&]+)?|
+        M\.?\s*Tech(?:\s+in\s+[\w\s&]+)?|
+        M\.?\s*E\.?(?:\s+in\s+[\w\s&]+)?|
+        M\.?\s*Sc\.?(?:\s+in\s+[\w\s&]+)?|
         MCA(?:\s+in\s+[\w\s&]+)?|MBA(?:\s+in\s+[\w\s&]+)?|
-        M\.?Com(?:\s+in\s+[\w\s&]+)?|MA(?:\s+in\s+[\w\s&]+)?|
-        M\.?Arch|M\.?Des|M\.?Ed\.?|
+        M\.?\s*Com(?:\s+in\s+[\w\s&]+)?|MA(?:\s+in\s+[\w\s&]+)?|
+        M\.?\s*Arch|M\.?\s*Des|M\.?\s*Ed\.?|
         MD|MS(?:\s+in\s+[\w\s&]+)?|
 
         # ── Doctorate ──────────────────────────────────────────
-        Ph\.?D\.?(?:\s+in\s+[\w\s&]+)?|
+        Ph\.?\s*D\.?(?:\s+in\s+[\w\s&]+)?|
         Doctor\s+of\s+Philosophy|
         Doctor\s+of\s+Medicine|
 

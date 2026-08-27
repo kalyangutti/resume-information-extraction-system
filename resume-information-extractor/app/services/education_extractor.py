@@ -274,7 +274,7 @@ def _extract_from_pdf_blocks(blocks: list[dict]) -> list[EduEntry]:
     if current_cluster:
         clusters.append(current_cluster)
 
-    # Extract one education entry per cluster
+    # Extract education entries per cluster using block parsing
     entries: list[EduEntry] = []
     for cluster in clusters:
         block_texts = [
@@ -283,9 +283,10 @@ def _extract_from_pdf_blocks(blocks: list[dict]) -> list[EduEntry]:
             for block in row
             if block.get("text", "").strip()
         ]
-        entry = _extract_entry_from_lines(block_texts)
-        if entry["degree"] is not None or entry["institution"] is not None:
-            entries.append(entry)
+        cluster_entries = _parse_blocks(block_texts)
+        for entry in cluster_entries:
+            if entry["degree"] is not None or entry["institution"] is not None:
+                entries.append(entry)
 
     return entries
 
@@ -645,11 +646,16 @@ def _clean_degree(line: str) -> str:
     """
     Extract a clean degree string.
 
+    - Takes only the first line if multi-line
     - Strips year ranges
     - Strips CGPA/Percentage suffix after pipe
     - Does NOT strip parentheses (preserves "Intermediate (Class XII)")
     """
+    if "\n" in line:
+        line = line.split("\n")[0]
     cleaned = YEAR_RANGE_PATTERN.sub("", line)
+    # Strip empty or whitespace-only parens left behind by date range removal
+    cleaned = re.sub(r"\(\s*\)", "", cleaned)
     # Drop everything after pipe (| CGPA: 9.2, | Percentage: 78%)
     cleaned = re.sub(r"\s*\|\s*.*$", "", cleaned)
     # Drop trailing CGPA/Percentage with no pipe
@@ -664,10 +670,19 @@ def _clean_degree(line: str) -> str:
 
 def _clean_institution(line: str) -> str:
     """Extract a clean institution name — collapse internal spaces, strip noise."""
+    if "\n" in line:
+        line = line.split("\n")[0]
     cleaned = YEAR_RANGE_PATTERN.sub("", line)
     cleaned = re.sub(r"\s*\|\s*.*$", "", cleaned)
     # Strip trailing standalone 4-digit year (right-aligned year on same line)
     cleaned = re.sub(r"\s*\b(?:19|20)\d{2}\b\s*$", "", cleaned)
+    # Strip trailing CGPA/Percentage/GPA suffixes
+    cleaned = re.sub(
+        r"\s*[,;]?\s*(?:CGPA|GPA|Percentage|Score|Grade|Marks)\s*[:\-]?\s*[\d./%]+\s*$",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
     # Collapse runs of whitespace (PDF blocks often have padded alignment spaces)
     cleaned = re.sub(r" {2,}", " ", cleaned)
     return cleaned.strip(" -\u2013\u2014|,")

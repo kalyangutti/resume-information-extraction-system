@@ -51,9 +51,14 @@ class Education(SQLModel):
     @field_validator("degree", "institution", mode="before")
     @classmethod
     def empty_string_to_none(cls, v: object) -> object:
-        """Convert empty or whitespace-only strings to None."""
-        if isinstance(v, str) and not v.strip():
-            return None
+        """Convert empty or whitespace-only strings to None, split on newline, and enforce max length."""
+        if isinstance(v, str):
+            v = v.strip()
+            if not v:
+                return None
+            if "\n" in v:
+                v = v.split("\n")[0].strip()
+            return v[:200] if len(v) > 200 else v
         return v
 
 
@@ -88,9 +93,14 @@ class Experience(SQLModel):
     @field_validator("job_title", "company", "duration", mode="before")
     @classmethod
     def empty_string_to_none(cls, v: object) -> object:
-        """Convert empty or whitespace-only strings to None."""
-        if isinstance(v, str) and not v.strip():
-            return None
+        """Convert empty or whitespace-only strings to None, split on newline, and enforce max length."""
+        if isinstance(v, str):
+            v = v.strip()
+            if not v:
+                return None
+            if "\n" in v:
+                v = v.split("\n")[0].strip()
+            return v[:200] if len(v) > 200 else v
         return v
 
 
