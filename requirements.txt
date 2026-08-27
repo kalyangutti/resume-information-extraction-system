@@ -4,5 +4,7 @@ python-multipart
 PyMuPDF
 python-docx
 pydantic
+sqlmodel
+email-validator
 pytest
 httpx
