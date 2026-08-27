@@ -10,9 +10,12 @@ All extraction is done locally using Python — no AI, no LLM, no external API c
 
 ---
 
-### 1. File Parsing
+### 1. File Parsing & Hyperlinks
 
-- **PyMuPDF (fitz)** is used to read PDF files. It provides both plain text (`get_text("text")`) and block-level layout data with `(x, y)` coordinates (`get_text("blocks")`).
+- **PyMuPDF (fitz)** is used to read PDF files. It provides:
+  - Plain text extraction (`get_text("text")`)
+  - Positional text blocks with `(x, y)` coordinates (`get_text("blocks")`)
+  - Target URIs from PDF link annotations (`page.get_links()`), ensuring hyperlinked text (like `linkedin` or `github`) extracts the full URL.
 - **python-docx** is used to read DOCX files. Paragraphs and tables are read separately since table content is not included in `doc.paragraphs` automatically.
 - All file processing is done **in memory** — no temp files are saved to disk.
 
@@ -34,11 +37,11 @@ Raw PDF/DOCX text is normalised before extraction. The `clean_text()` utility ha
 
 | Field | How it is extracted |
 |-------|-------------------|
-| **Name** | Reads first 5 lines, skips emails/URLs/section headings, returns the first 2–4 word proper-noun line |
+| **Name** | Reads first 5 lines, skips emails/URLs/titles, supports single-letter initials (e.g. `G B Harsha Vardhan`), returns the first 2–4 word name line |
 | **Email** | Regex finds a candidate string, then `email-validator` library validates it (RFC 5322 compliant) |
 | **Phone** | Two-pass regex (structured + fallback), filters out false positives like year ranges (e.g. 2020–2024) |
 | **Skills** | Keyword scan against a 500+ entry `skills.json` file with aliases (e.g. `js/JS/javascript → JavaScript`) |
-| **LinkedIn / GitHub** | URL pattern matching |
+| **LinkedIn / GitHub** | Pattern matching on text + target URIs extracted from PDF link annotations |
 | **Education** | Three complementary strategies — see below |
 | **Experience** | Section heading detection, job block splitting, extraction of title, company, and duration |
 | **Total Experience** | Date ranges parsed, overlapping intervals merged, total days divided by 365.25 |
@@ -46,17 +49,17 @@ Raw PDF/DOCX text is normalised before extraction. The `clean_text()` utility ha
 #### Education — Three Strategies
 
 - **(A) DOCX Tables** — table rows parsed cell-by-cell, each row treated as one education entry
-- **(B) PDF Positional Blocks** — text blocks grouped by `y-coordinate` to handle side-by-side column layouts where degree and institution appear in separate columns
+- **(B) PDF Positional Blocks** — text blocks grouped by `y-coordinate` into clusters, then parsed using boundary triggers to handle multi-entry column layouts
 - **(C) Plain Text Parsing** — section-based parsing with 4 boundary triggers to handle compact formats that have no blank lines between entries
 
-All three run and results are combined and deduplicated.
+All three run and results are combined and deduplicated. `_clean_degree()` strips empty parentheses `()` left behind by date range removal, while `_clean_institution()` strips trailing CGPA/Percentage suffixes (`CGPA: 9.2`).
 
 ---
 
 ### 4. Validation
 
 - Response models use **SQLModel** (Pydantic V2 compatible) with `Field` constraints (`min_length`, `max_length`, `ge`, `le`)
-- `field_validator` used for custom cleanup — empty string → `None`, lowercase email, deduplicate skills, round experience to 1 decimal
+- `field_validator` used for custom cleanup — empty string → `None`, split on newline, cap max string length, lowercase email, deduplicate skills, round experience to 1 decimal
 - `EmailStr` from `email-validator` ensures proper email validation instead of relying on regex alone
 
 ---

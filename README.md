@@ -194,14 +194,14 @@ resume-information-extractor/
 │   ├── schemas/
 │   │   └── resume.py                # Response models (SQLModel + Pydantic V2)
 │   ├── services/
-│   │   ├── file_parser.py           # Reads PDF and DOCX files
+│   │   ├── file_parser.py           # Reads PDF and DOCX files + link annotations
 │   │   ├── resume_extractor.py      # Main pipeline, calls all extractors
-│   │   ├── education_extractor.py   # Extracts degree + institution
+│   │   ├── education_extractor.py   # Multi-strategy degree + institution extraction
 │   │   ├── experience_extractor.py  # Extracts job title, company, duration
 │   │   ├── experience_calculator.py # Calculates total years of experience
 │   │   └── skill_extractor.py       # Detects skills from skills.json
 │   ├── utils/
-│   │   ├── regex_patterns.py        # All regex patterns in one place
+│   │   ├── regex_patterns.py        # Centralised regex patterns (degree, phone, etc.)
 │   │   └── text_cleaner.py          # Cleans raw PDF/DOCX text
 │   ├── data/
 │   │   └── skills.json              # 500+ skills with aliases
@@ -210,10 +210,12 @@ resume-information-extractor/
 │
 ├── tests/
 │   ├── test_api.py                  # API endpoint tests
-│   └── test_resume_extractor.py     # Unit tests (114 tests)
+│   └── test_resume_extractor.py     # Unit tests (117 tests)
 │
 ├── requirements.txt
-└── README.md
+├── README.md                        # Project documentation
+├── NOTES.md                         # Approach, assumptions & limitations
+└── DOCUMENTATION.md                 # Technical specification of every module
 ```
 
 ---
@@ -222,12 +224,12 @@ resume-information-extractor/
 
 | Field | Approach |
 |-------|---------|
-| **Name** | Reads first 5 lines, picks the first 2–4 word name-like line |
-| **Email** | Regex to find candidate, then `email-validator` library for validation |
-| **Phone** | Regex with country code support, filters out year-range false positives |
-| **LinkedIn / GitHub** | URL pattern matching |
+| **Name** | Reads top lines, skips emails/URLs/titles, handles single-letter initials (e.g. G B Harsha) |
+| **Email** | Regex to find candidate, validated with `email-validator` library (RFC 5322) |
+| **Phone** | Two-pass regex (structured + fallback), filters out year-range false positives |
+| **LinkedIn / GitHub** | Pattern matching on text + extracts target URIs from PDF link annotations |
 | **Skills** | Keyword scan against `skills.json` — case-insensitive, with aliases |
-| **Education** | 3-strategy approach (DOCX tables, PDF layout blocks, plain text) |
+| **Education** | 3-strategy approach (DOCX tables, PDF layout blocks with boundary triggers, plain text) |
 | **Experience** | Section heading detection, splits into job blocks, extracts title/company/duration |
 | **Total Experience** | Parses all date ranges, merges overlapping periods, returns total in years |
 
@@ -238,7 +240,7 @@ resume-information-extractor/
 ## Running Tests
 
 ```bash
-# Run all 114 tests
+# Run all 117 tests
 python -m pytest tests/ -v
 ```
 
@@ -253,8 +255,8 @@ All tests should pass. The tests cover every extractor function individually as 
 | `fastapi` | Web framework |
 | `uvicorn[standard]` | Server to run FastAPI |
 | `python-multipart` | Required for file uploads |
-| `PyMuPDF` | Reads PDF files |
-| `python-docx` | Reads DOCX files |
+| `PyMuPDF` | Reads PDF files + layout block coordinates + link annotations |
+| `python-docx` | Reads DOCX files and tables |
 | `sqlmodel` | Response schema models (Pydantic V2) |
 | `email-validator` | Validates email addresses |
 | `pytest` | Test runner |
