@@ -1,53 +1,35 @@
 {
-  "name": "Ravi Kumar",
-  "email": "ravi.kumar@outlook.com",
-  "phone": "+91 9123456789",
+  "name": "VEMPATI SHANKAR",
+  "email": "vempatishankar123@gmail.com",
+  "phone": "+91 7416940374",
   "skills": [
-    "Python",
-    "PyTorch",
-    "TensorFlow",
-    "Scikit-learn",
-    "MLOps",
-    "Apache Kafka",
-    "Apache Airflow",
-    "Docker",
-    "Kubernetes",
-    "AWS SageMaker",
-    "Google Cloud Platform",
-    "Terraform",
-    "Jenkins",
+    "GitHub",
+    "Java",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "SQL",
+    "VS Code",
     "Git",
-    "PostgreSQL",
-    "MongoDB",
-    "Redis",
-    "FastAPI",
-    "REST APIs",
-    "NLP",
-    "Computer Vision",
-    "BERT"
+    "Firebase",
+    "Spring"
   ],
   "education": [
     {
-      "degree": "M.Tech in Artificial Intelligence",
-      "institution": "IIT Bombay"
+      "degree": "Bachelor of Technology in Computer Science and Engineering",
+      "institution": null
     },
     {
-      "degree": "B.Tech in Electronics",
-      "institution": "NIT Trichy"
-    }
-  ],
-  "experience": [
-    {
-      "job_title": "Senior ML Engineer",
-      "company": "Google India Pvt Ltd",
-      "duration": "March 2021 - Present"
+      "degree": "Board of Intermediate (MPC)",
+      "institution": "Narayana(Jr) collage"
     },
     {
-      "job_title": "ML Engineer",
-      "company": "Flipkart Internet Pvt Ltd",
-      "duration": "July 2019 - February 2021"
+      "degree": "SSC (Xth Grade)",
+      "institution": "Abhyas Techno School"
     }
   ],
-  "linkedin": "https://linkedin.com/in/ravikumar",
-  "github": "https://github.com/ravikumar"
+  "experience": [],
+  "linkedin": null,
+  "github": "https://github.com/vempatishankar",
+  "total_experience_years": 0.0
 }

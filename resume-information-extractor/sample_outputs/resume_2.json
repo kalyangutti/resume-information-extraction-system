@@ -1,33 +1,48 @@
 {
-  "name": "Priya Mehta",
-  "email": "priya.mehta@gmail.com",
-  "phone": "+91 8765432109",
+  "name": "KALYAN BABU GUTTI",
+  "email": "kalyangutti19@gmail.com",
+  "phone": "+91 9014929583",
   "skills": [
+    "GitHub",
+    "FastAPI",
     "Python",
+    "PostgreSQL",
+    "Redis",
+    "REST APIs",
+    "Java",
+    "SQL",
+    "API Design",
+    "MySQL",
+    "JWT",
     "Machine Learning",
-    "Deep Learning",
+    "Computer Vision",
     "Scikit-learn",
     "TensorFlow",
     "Pandas",
+    "OpenCV",
     "NumPy",
-    "Matplotlib",
-    "SQL",
+    "Artificial Intelligence",
+    "Object-Oriented Programming",
+    "Postman",
     "Git",
-    "Jupyter Notebook"
+    "XGBoost"
   ],
   "education": [
     {
-      "degree": "B.Sc in Data Science",
-      "institution": "Pune University"
-    }
-  ],
-  "experience": [
+      "degree": "B.Tech in Computer Science & Engineering",
+      "institution": "Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology"
+    },
     {
-      "job_title": "Data Science Intern",
-      "company": "Analytics India Pvt Ltd",
-      "duration": "May 2023 - July 2023"
+      "degree": "Intermediate (Class XII)",
+      "institution": "Narayana Junior College"
+    },
+    {
+      "degree": "10th ICSE",
+      "institution": "St. Ann's School"
     }
   ],
-  "linkedin": "https://linkedin.com/in/priyamehta",
-  "github": "https://github.com/priyamehta"
+  "experience": [],
+  "linkedin": "https://linkedin.com/in/kalyan-gutti",
+  "github": "https://github.com/KalyanGutti",
+  "total_experience_years": 0.0
 }

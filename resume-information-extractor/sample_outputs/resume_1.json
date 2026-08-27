@@ -1,40 +1,47 @@
 {
-  "name": "Arjun Sharma",
-  "email": "arjun.sharma@email.com",
-  "phone": "+91 9876543210",
+  "name": "G B Harsha Vardhan",
+  "email": "harshagb.itis@gmail.com",
+  "phone": null,
   "skills": [
-    "Python",
-    "FastAPI",
-    "Django",
-    "PostgreSQL",
-    "Redis",
+    "REST APIs",
+    "Microservices",
     "Docker",
     "Kubernetes",
-    "AWS",
-    "Git",
-    "REST APIs",
-    "CI/CD",
-    "SQL",
-    "Linux"
+    "InfluxDB",
+    "Data Analysis",
+    "Neural Networks",
+    "Python",
+    "Machine Learning",
+    "PostgreSQL",
+    "MySQL",
+    "C++",
+    "Go",
+    "Postman",
+    "VS Code",
+    "GitHub"
   ],
   "education": [
     {
-      "degree": "B.Tech in Computer Science",
-      "institution": "Indian Institute of Technology, Delhi"
+      "degree": "B.Tech",
+      "institution": "Degree"
+    },
+    {
+      "degree": "HSC BIEAP",
+      "institution": "IIT Gandhinagar"
+    },
+    {
+      "degree": "SSC CBSE",
+      "institution": "Narayana College"
     }
   ],
   "experience": [
     {
-      "job_title": "Software Engineer",
-      "company": "Infosys Limited",
-      "duration": "June 2022 - Present"
-    },
-    {
-      "job_title": "Software Engineer Intern",
-      "company": "TCS (Tata Consultancy Services)",
-      "duration": "January 2022 - May 2022"
+      "job_title": "May-Jul 2022",
+      "company": "services and using protocol buffers to serialize the data between different microservices",
+      "duration": null
     }
   ],
-  "linkedin": "https://linkedin.com/in/arjunsharma",
-  "github": "https://github.com/arjunsharma"
+  "linkedin": "https://linkedin.com/in/g-b-harshavardhan",
+  "github": null,
+  "total_experience_years": 0.0
 }
