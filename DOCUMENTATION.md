@@ -30,8 +30,6 @@ This is the entry point of the FastAPI application.
 **What it does:**
 - Creates the FastAPI app instance
 - Registers the resume router under `/api/v1`
-- Serves the web UI (static HTML file) at `/static`
-- Handles requests to `/` and `/ui` by returning the upload page
 - CORS is open (`allow_origins=["*"]`) so any browser or Postman can call the API
 
 There is no business logic here — it just wires everything together.

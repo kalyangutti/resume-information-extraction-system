@@ -48,21 +48,15 @@ The server starts at `http://localhost:8000`
 
 | URL | What it is |
 |-----|-----------|
-| `http://localhost:8000/ui` | Web upload page (drag and drop) |
 | `http://localhost:8000/docs` | Swagger UI — test the API in browser |
+| `http://localhost:8000/redoc` | ReDoc API documentation |
 | `http://localhost:8000/api/v1/resume/extract` | API endpoint |
 
 ---
 
 ## How to Use
 
-### Option 1 — Web UI
-
-Open `http://localhost:8000/ui` in your browser, drag and drop a resume, and see the JSON output instantly.
-
----
-
-### Option 2 — Postman
+### Option 1 — Postman
 
 1. Open Postman
 2. Set method to `POST`
@@ -71,6 +65,15 @@ Open `http://localhost:8000/ui` in your browser, drag and drop a resume, and see
 5. Add a key named `file`, change type to **File**
 6. Select your resume file (PDF or DOCX)
 7. Click **Send**
+
+---
+
+### Option 2 — Swagger UI (`/docs`)
+
+1. Open `http://localhost:8000/docs` in your browser
+2. Expand `POST /api/v1/resume/extract`
+3. Click **Try it out**
+4. Choose a resume file (`.pdf` or `.docx`) and click **Execute**
 
 ---
 
@@ -203,10 +206,8 @@ resume-information-extractor/
 │   ├── utils/
 │   │   ├── regex_patterns.py        # Centralised regex patterns (degree, phone, etc.)
 │   │   └── text_cleaner.py          # Cleans raw PDF/DOCX text
-│   ├── data/
-│   │   └── skills.json              # 500+ skills with aliases
-│   └── static/
-│       └── index.html               # Web upload UI
+│   └── data/
+│       └── skills.json              # 500+ skills with aliases
 │
 ├── tests/
 │   ├── test_api.py                  # API endpoint tests
